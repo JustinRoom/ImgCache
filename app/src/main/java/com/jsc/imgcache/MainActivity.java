@@ -28,8 +28,15 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(v.getContext(), LocalImgActivity.class));
             }
         });
+        binding.btnNetImg2Bitmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), NetImg2BitmapActivity.class));
+            }
+        });
         ViewOutlineUtils.applyEllipticOutline(binding.btnNetImg);
         ViewOutlineUtils.applyEllipticOutline(binding.btnLocalImg);
+        ViewOutlineUtils.applyEllipticOutline(binding.btnNetImg2Bitmap);
     }
 
     @Override

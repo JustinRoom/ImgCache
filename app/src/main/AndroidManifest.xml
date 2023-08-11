@@ -26,6 +26,7 @@
 
         <activity android:name=".NetImgActivity"/>
         <activity android:name=".LocalImgActivity"/>
+        <activity android:name=".NetImg2BitmapActivity"/>
     </application>
 
 </manifest>
