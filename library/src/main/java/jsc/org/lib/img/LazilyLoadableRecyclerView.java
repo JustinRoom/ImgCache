@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,8 +30,9 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         public void run() {
             int position = firstVisiblePosition;
             while (position <= lastVisiblePosition) {
-                if (mLazyLoader != null) {
-                    mLazyLoader.lazyLoad(position, findViewHolderForAdapterPosition(position), anticipatedImgWidth, anticipatedImgHeight);
+                ViewHolder holder = findViewHolderForAdapterPosition(position);
+                if (mLazyLoader != null && holder != null) {
+                    mLazyLoader.lazyLoad(position, holder, anticipatedImgWidth, anticipatedImgHeight);
                 }
                 position++;
             }
@@ -62,9 +64,13 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         super.onScrollStateChanged(state);
         //stopped the scrolling
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            calculatePos();
-            handler.removeCallbacks(r);
-            handler.postDelayed(r, 50);
+            boolean changed = calculatePos();
+            if (visibleItemPositionChanged || changed) {
+                visibleItemPositionChanged = false;
+                Log.d("LazilyLoadable", "onScrollStateChanged: Reload Img");
+                handler.removeCallbacks(r);
+                handler.postDelayed(r, 50);
+            }
             int loadedCount = getAdapter() == null ? 0 : getAdapter().getItemCount();
             if (morePage && mPageLoader != null) {
                 mPageLoader.onLoadPage(this, loadedCount, pageCapacity);
@@ -74,10 +80,46 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         }
     }
 
-    private void calculatePos() {
-        if (getAdapter() == null || getAdapter().getItemCount() == 0) {
-            return;
+    @Override
+    public void onScrolled(int dx, int dy) {
+        super.onScrolled(dx, dy);
+        if (!visibleItemPositionChanged) {
+            visibleItemPositionChanged = calculateScrolledPos();
         }
+    }
+
+    private boolean visibleItemPositionChanged = false;
+
+    private boolean calculateScrolledPos() {
+        if (getAdapter() == null || getAdapter().getItemCount() == 0) {
+            return false;
+        }
+        boolean changed = false;
+        LayoutManager layoutManager = getLayoutManager();
+        // GridLayoutManager extend LinearLayoutManager
+        if (layoutManager instanceof LinearLayoutManager) {
+            int firstVPos = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            int lastVPos = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            if (firstVPos != this.firstVisiblePosition || lastVPos != this.lastVisiblePosition) {
+                changed = true;
+            }
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+            int[] firstInto = ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null);
+            int[] lastInto = ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(null);
+            int firstVPos = findMin(firstInto);
+            int lastVPos = findMax(lastInto);
+            if (firstVPos != this.firstVisiblePosition || lastVPos != this.lastVisiblePosition) {
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    private boolean calculatePos() {
+        if (getAdapter() == null || getAdapter().getItemCount() == 0) {
+            return false;
+        }
+        boolean changed = false;
         LayoutManager layoutManager = getLayoutManager();
         // GridLayoutManager extend LinearLayoutManager
         if (layoutManager instanceof LinearLayoutManager) {
@@ -86,6 +128,7 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
             if (firstVPos != this.firstVisiblePosition || lastVPos != this.lastVisiblePosition) {
                 this.firstVisiblePosition = firstVPos;
                 this.lastVisiblePosition = lastVPos;
+                changed = true;
             }
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             int[] firstInto = ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null);
@@ -95,8 +138,10 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
             if (firstVPos != this.firstVisiblePosition || lastVPos != this.lastVisiblePosition) {
                 this.firstVisiblePosition = firstVPos;
                 this.lastVisiblePosition = lastVPos;
+                changed = true;
             }
         }
+        return changed;
     }
 
     private int findMin(int[] into) {
@@ -146,9 +191,9 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
     }
 
     public void setAnticipatedImgSize(String baseOn, int baseWidth, int baseHeight, int value) {
-        checkInt(baseWidth,"baseWidth");
-        checkInt(baseHeight,"baseHeight");
-        checkInt(value,"value");
+        checkInt(baseWidth, "baseWidth");
+        checkInt(baseHeight, "baseHeight");
+        checkInt(value, "value");
         int base = "width".equals(baseOn) ? baseWidth : baseHeight;
         int multi = value / base;
         if (multi * base < value) {
@@ -159,8 +204,8 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
     }
 
     public void setAnticipatedImgSize(int anticipatedImgWidth, int anticipatedImgHeight) {
-        checkInt(anticipatedImgWidth,"anticipatedImgWidth");
-        checkInt(anticipatedImgHeight,"anticipatedImgHeight");
+        checkInt(anticipatedImgWidth, "anticipatedImgWidth");
+        checkInt(anticipatedImgHeight, "anticipatedImgHeight");
         this.anticipatedImgWidth = anticipatedImgWidth;
         this.anticipatedImgHeight = anticipatedImgHeight;
     }
