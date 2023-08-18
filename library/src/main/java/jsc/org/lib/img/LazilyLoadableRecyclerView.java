@@ -64,6 +64,8 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         super.onScrollStateChanged(state);
         //stopped the scrolling
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
+            mLastHor = 0;
+            mLastVer = 0;
             boolean changed = calculatePos();
             if (visibleItemPositionChanged || changed) {
                 visibleItemPositionChanged = false;
@@ -80,10 +82,15 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         }
     }
 
+    int mLastHor = 0;
+    int mLastVer = 0;
+
     @Override
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
-        if (!visibleItemPositionChanged) {
+        int hor = Integer.compare(dx, 0);
+        int ver = Integer.compare(dy, 0);
+        if (!visibleItemPositionChanged && (mLastHor != hor || mLastVer != ver)) {
             visibleItemPositionChanged = calculateScrolledPos();
         }
     }
