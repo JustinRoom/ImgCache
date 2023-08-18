@@ -91,6 +91,8 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         int hor = Integer.compare(dx, 0);
         int ver = Integer.compare(dy, 0);
         if (!visibleItemPositionChanged && (mLastHor != hor || mLastVer != ver)) {
+            mLastHor = hor;
+            mLastVer = ver;
             visibleItemPositionChanged = calculateScrolledPos();
         }
     }
