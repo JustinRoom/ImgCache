@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ImgCache"
 include ':app'
-include ':library'
+include ':imgCacheLibrary'
