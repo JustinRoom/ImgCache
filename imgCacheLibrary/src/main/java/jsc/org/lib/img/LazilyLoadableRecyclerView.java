@@ -64,8 +64,9 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         super.onScrollStateChanged(state);
         //stopped the scrolling
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            mLastHor = 0;
-            mLastVer = 0;
+            mLastHorScrollDirection = 0;
+            mLastVerScrollDirection = 0;
+            directionChangedCount = 0;
             boolean changed = calculatePos();
             if (visibleItemPositionChanged || changed) {
                 visibleItemPositionChanged = false;
@@ -82,18 +83,26 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         }
     }
 
-    int mLastHor = 0;
-    int mLastVer = 0;
+    int mLastHorScrollDirection = 0;
+    int mLastVerScrollDirection = 0;
+    int directionChangedCount = 0;
 
     @Override
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
-        int hor = Integer.compare(dx, 0);
-        int ver = Integer.compare(dy, 0);
-        if (!visibleItemPositionChanged && (mLastHor != hor || mLastVer != ver)) {
-            mLastHor = hor;
-            mLastVer = ver;
-            visibleItemPositionChanged = calculateScrolledPos();
+        if (visibleItemPositionChanged) {
+            return;
+        }
+        int horDirection = Integer.compare(dx, 0);
+        int verDirection = Integer.compare(dy, 0);
+        if (mLastHorScrollDirection != horDirection || mLastVerScrollDirection != verDirection) {
+            mLastHorScrollDirection = horDirection;
+            mLastVerScrollDirection = verDirection;
+            directionChangedCount++;
+            //忽略第一次滑动方向改变
+            if (directionChangedCount > 1) {
+                visibleItemPositionChanged = calculateScrolledPos();
+            }
         }
     }
 

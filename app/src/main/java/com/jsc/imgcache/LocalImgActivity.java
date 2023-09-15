@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,7 +51,7 @@ public class LocalImgActivity extends BaseActivity {
         binding.recyclerView.setAnticipatedImgSize("width", 60, 80, getResources().getDisplayMetrics().widthPixels / column);
         binding.recyclerView.setLazyLoader(new ILazyLoader() {
             @Override
-            public void lazyLoad(int position, RecyclerView.ViewHolder holder, int anticipatedImgWidth, int anticipatedImgHeight) {
+            public void lazyLoad(int position, @NonNull RecyclerView.ViewHolder holder, int anticipatedImgWidth, int anticipatedImgHeight) {
                 LocalImgAdapter.IViewHolder mHolder = (LocalImgAdapter.IViewHolder) holder;
                 ImgCacheExecutor.with("ImgActivity")
                         .localSource()

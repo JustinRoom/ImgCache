@@ -3,6 +3,7 @@ package com.jsc.imgcache;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -85,7 +86,7 @@ public class NetImgActivity extends BaseActivity {
         });
         binding.recyclerView.setLazyLoader(new ILazyLoader() {
             @Override
-            public void lazyLoad(int position, RecyclerView.ViewHolder holder, int anticipatedImgWidth, int anticipatedImgHeight) {
+            public void lazyLoad(int position, @NonNull RecyclerView.ViewHolder holder, int anticipatedImgWidth, int anticipatedImgHeight) {
                 NetImgAdapter.IViewHolder mHolder = (NetImgAdapter.IViewHolder) holder;
                 ImgCacheExecutor.with("ImgActivity")
                         .netSource()

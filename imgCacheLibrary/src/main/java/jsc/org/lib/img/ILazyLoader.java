@@ -18,10 +18,11 @@
 
 package jsc.org.lib.img;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public interface ILazyLoader {
 
-    void lazyLoad(int position, RecyclerView.ViewHolder holder, int anticipatedImgWidth, int anticipatedImgHeight);
+    void lazyLoad(int position, @NonNull RecyclerView.ViewHolder holder, int anticipatedImgWidth, int anticipatedImgHeight);
 
 }
