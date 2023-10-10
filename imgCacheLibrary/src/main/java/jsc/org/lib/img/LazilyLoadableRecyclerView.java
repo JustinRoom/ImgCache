@@ -23,7 +23,6 @@ import java.util.Locale;
 public class LazilyLoadableRecyclerView extends RecyclerView {
 
     private ILazyLoader mLazyLoader = null;
-    private IPageLoader mPageLoader = null;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable r = new Runnable() {
         @Override
@@ -44,8 +43,6 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
     private int anticipatedImgWidth;
     //图片加载预想高度
     private int anticipatedImgHeight;
-    private boolean morePage = false;
-    private int pageCapacity = 12;
 
     public LazilyLoadableRecyclerView(@NonNull Context context) {
         super(context);
@@ -73,10 +70,6 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
                 Log.d("LazilyLoadable", "onScrollStateChanged: Reload Img");
                 handler.removeCallbacks(r);
                 handler.postDelayed(r, 50);
-            }
-            int loadedCount = getAdapter() == null ? 0 : getAdapter().getItemCount();
-            if (morePage && mPageLoader != null) {
-                mPageLoader.onLoadPage(this, loadedCount, pageCapacity);
             }
         } else {
             handler.removeCallbacks(r);
@@ -189,23 +182,6 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
 
     public void setLazyLoader(ILazyLoader lazyLoader) {
         this.mLazyLoader = lazyLoader;
-    }
-
-    public void setPageLoader(IPageLoader pageLoader) {
-        this.mPageLoader = pageLoader;
-    }
-
-    public void setPageCapacity(int capacity) {
-        checkInt(capacity, "capacity");
-        this.pageCapacity = capacity;
-    }
-
-    public void setMorePage(int lastPageCount) {
-        setMorePage(lastPageCount >= pageCapacity);
-    }
-
-    public void setMorePage(boolean morePage) {
-        this.morePage = morePage;
     }
 
     public void setAnticipatedImgSize(String baseOn, int baseWidth, int baseHeight, int value) {

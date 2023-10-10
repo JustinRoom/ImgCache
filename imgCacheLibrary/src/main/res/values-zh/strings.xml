@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="img_pull_down_to_refresh">下拉刷新</string>
+    <string name="img_release_to_refresh">松手可刷新</string>
+    <string name="img_refreshing">正在刷新</string>
+    <string name="img_pull_up_to_load_more">上拉加载更多</string>
+    <string name="img_release_to_load_more">松手可加载</string>
+    <string name="img_loading">正在加载更多</string>
+    <string name="img_no_more_data">已经没有更多了哦~</string>
+</resources>

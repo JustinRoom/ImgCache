@@ -2,6 +2,8 @@ package com.jsc.imgcache;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jsc.org.lib.img.ILazyLoader;
-import jsc.org.lib.img.IPageLoader;
 import jsc.org.lib.img.ImgCacheExecutor;
-import jsc.org.lib.img.LazilyLoadableRecyclerView;
+import jsc.org.lib.img.refreshlayout.SimpleRefreshLayout;
+import jsc.org.lib.img.refreshlayout.widget.SimpleBottomView;
+import jsc.org.lib.img.refreshlayout.widget.SimpleLoadMoreView;
+import jsc.org.lib.img.refreshlayout.widget.SimpleRefreshView;
 
 /**
  * <pre class="preprint">
@@ -42,48 +46,50 @@ public class NetImgActivity extends BaseActivity {
 
     ActivityImgBinding binding = null;
     NetImgAdapter netImgAdapter = null;
+    Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityImgBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.srlListContainer.setScrollEnable(true);
+        binding.srlListContainer.setPullUpEnable(true);
+        binding.srlListContainer.setPullDownEnable(true);
+        binding.srlListContainer.setHeaderView(new SimpleRefreshView(this));
+        binding.srlListContainer.setFooterView(new SimpleLoadMoreView(this));
+        binding.srlListContainer.setBottomView(new SimpleBottomView(this));
+        binding.srlListContainer.setOnSimpleRefreshListener(new SimpleRefreshLayout.OnSimpleRefreshListener() {
+            @Override
+            public void onRefresh(SimpleRefreshLayout refreshLayout) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshData();
+                        binding.srlListContainer.refreshComplete();
+                        binding.recyclerView.loadImgDelay(500);
+                    }
+                }, 4000);
+            }
+
+            @Override
+            public void onLoadMore(SimpleRefreshLayout refreshLayout) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadMoreData();
+                        binding.srlListContainer.loadMoreComplete();
+                        binding.srlListContainer.setNoMore(true);
+                        binding.recyclerView.loadImgDelay(500);
+                    }
+                }, 1000);
+            }
+        });
+
         int column = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 4 : 8;
         binding.recyclerView.setLayoutManager(new GridLayoutManager(this, column));
         binding.recyclerView.setAnticipatedImgSize("width", 60, 80, getResources().getDisplayMetrics().widthPixels / column);
-        binding.recyclerView.setPageLoader(new IPageLoader() {
-            @Override
-            public void onLoadPage(LazilyLoadableRecyclerView recyclerView, int loadedCount, int pageCapacity) {
-                List<String> urls = new ArrayList<>();
-                urls.add("https://t7.baidu.com/it/u=516589436,706141569&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=330403314,1054912416&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=3857292935,259148533&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=2196286164,316669081&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=2621658848,3952322712&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=4080826490,615918710&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=3713375227,571533122&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=774679999,2679830962&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=3631608752,3069876728&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=801209673,1770377204&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=1010739515,2488150950&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=124476473,2583135375&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=1415984692,3889465312&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=3988344443,4282949406&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=1635608122,693552335&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=813347183,2158335217&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=738441947,1208408731&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=334080491,3307726294&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=2235903830,1856743055&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=1856946436,1599379154&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=3683704156,288749744&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=2084624597,235761712&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=2359570649,2574326109&fm=193&f=GIF");
-                urls.add("https://t7.baidu.com/it/u=2731426114,1290998454&fm=193&f=GIF");
-                netImgAdapter.addUrls(urls);
-                recyclerView.setMorePage(false);
-                recyclerView.loadImgDelay(100);
-            }
-        });
         binding.recyclerView.setLazyLoader(new ILazyLoader() {
             @Override
             public void lazyLoad(int position, @NonNull RecyclerView.ViewHolder holder, int anticipatedImgWidth, int anticipatedImgHeight) {
@@ -104,6 +110,11 @@ public class NetImgActivity extends BaseActivity {
 
     @Override
     public void onLazyLoad() {
+        refreshData();
+        binding.recyclerView.loadImgDelay(250);
+    }
+
+    private void refreshData() {
         List<String> urls = new ArrayList<>();
         urls.add("https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF");
         urls.add("https://t7.baidu.com/it/u=737555197,308540855&fm=193&f=GIF");
@@ -127,8 +138,35 @@ public class NetImgActivity extends BaseActivity {
         urls.add("https://t7.baidu.com/it/u=3902551096,3717324701&fm=193&f=GIF");
         urls.add("https://t7.baidu.com/it/u=4188671375,2323574798&fm=193&f=GIF");
         netImgAdapter.setUrls(urls);
-        binding.recyclerView.setMorePage(true);
-        binding.recyclerView.loadImgDelay(300);
+    }
+
+    private void loadMoreData() {
+        List<String> urls = new ArrayList<>();
+        urls.add("https://t7.baidu.com/it/u=516589436,706141569&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=330403314,1054912416&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=3857292935,259148533&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=2196286164,316669081&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=2621658848,3952322712&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=4080826490,615918710&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=3713375227,571533122&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=774679999,2679830962&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=3631608752,3069876728&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=801209673,1770377204&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=1010739515,2488150950&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=124476473,2583135375&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=1415984692,3889465312&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=3988344443,4282949406&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=1635608122,693552335&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=813347183,2158335217&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=738441947,1208408731&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=334080491,3307726294&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=2235903830,1856743055&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=1856946436,1599379154&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=3683704156,288749744&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=2084624597,235761712&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=2359570649,2574326109&fm=193&f=GIF");
+        urls.add("https://t7.baidu.com/it/u=2731426114,1290998454&fm=193&f=GIF");
+        netImgAdapter.addUrls(urls);
     }
 
     @Override
