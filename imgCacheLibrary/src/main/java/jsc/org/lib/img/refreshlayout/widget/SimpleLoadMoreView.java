@@ -31,12 +31,12 @@ public class SimpleLoadMoreView extends LinearLayout implements IFooterWrapper {
     public SimpleLoadMoreView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(getContext()).inflate(R.layout.img_view_refresh_footer, this, true);
-        ivLoading = (ImageView) findViewById(R.id.iv_loading);
-        tvLoading = (TextView) findViewById(R.id.tv_loading);
+        ivLoading = findViewById(R.id.iv_loading);
+        tvLoading = findViewById(R.id.tv_loading);
     }
 
     @Override
-    public View getFooterView() {
+    public View getView() {
         return this;
     }
 

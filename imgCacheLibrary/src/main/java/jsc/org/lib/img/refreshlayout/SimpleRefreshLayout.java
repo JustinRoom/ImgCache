@@ -109,7 +109,7 @@ public class SimpleRefreshLayout extends ViewGroup implements NestedScrollingPar
         if (header == null) return;
         removeHeaderView();
         this.mHeaderWrapper = header;
-        this.mHeaderView = header.getHeaderView();
+        this.mHeaderView = header.getView();
         addView(mHeaderView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
@@ -131,7 +131,7 @@ public class SimpleRefreshLayout extends ViewGroup implements NestedScrollingPar
         if (footer == null) return;
         removeFooterView();
         this.mFooterWrapper = footer;
-        this.mFooterView = footer.getFooterView();
+        this.mFooterView = footer.getView();
         addView(mFooterView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
@@ -153,7 +153,7 @@ public class SimpleRefreshLayout extends ViewGroup implements NestedScrollingPar
         if (bottom == null) return;
         removeBottomView();
         this.mBottomWrapper = bottom;
-        this.mBottomView = bottom.getBottomView();
+        this.mBottomView = bottom.getView();
         addView(mBottomView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
@@ -580,7 +580,7 @@ public class SimpleRefreshLayout extends ViewGroup implements NestedScrollingPar
                 break;
             case State.BOTTOM:
                 if (mBottomWrapper != null) {
-                    mBottomWrapper.showBottom();
+                    mBottomWrapper.onShow();
                 }
                 break;
         }

@@ -32,12 +32,12 @@ public class SimpleRefreshView extends LinearLayout implements IHeaderWrapper {
     public SimpleRefreshView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(getContext()).inflate(R.layout.img_view_refresh_header, this, true);
-        ivRefresh = (ImageView) findViewById(R.id.iv_refresh);
-        tvRefresh = (TextView) findViewById(R.id.tv_refresh);
+        ivRefresh = findViewById(R.id.iv_refresh);
+        tvRefresh = findViewById(R.id.tv_refresh);
     }
 
     @Override
-    public View getHeaderView() {
+    public View getView() {
         return this;
     }
 

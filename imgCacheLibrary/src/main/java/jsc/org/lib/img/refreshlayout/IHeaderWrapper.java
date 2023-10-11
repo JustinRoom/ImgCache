@@ -1,13 +1,6 @@
 package jsc.org.lib.img.refreshlayout;
 
-import android.view.View;
-
-public interface IHeaderWrapper {
-
-    /**
-     * 获取刷新布局
-     */
-    View getHeaderView();
+public interface IHeaderWrapper extends IViewWrapper {
 
     /**
      * 下拉中

@@ -1,14 +1,6 @@
 package jsc.org.lib.img.refreshlayout;
 
-import android.view.View;
-
-public interface IFooterWrapper {
-
-    /**
-     * 获取加载更多布局
-     *
-     */
-    View getFooterView();
+public interface IFooterWrapper extends IViewWrapper {
 
     /**
      * 上拉中
