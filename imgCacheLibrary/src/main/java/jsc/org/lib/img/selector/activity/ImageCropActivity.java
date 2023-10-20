@@ -18,8 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.isseiaoki.simplecropview.CropImageView;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +25,7 @@ import java.io.OutputStream;
 
 import jsc.org.lib.img.ImgUtils;
 import jsc.org.lib.img.R;
+import jsc.org.lib.img.crop.CropImageView;
 import jsc.org.lib.img.selector.provider.RoundViewOutlineProvider;
 
 public class ImageCropActivity extends AppCompatActivity {

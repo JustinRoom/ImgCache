@@ -7,7 +7,7 @@
 
     <include layout="@layout/img_title_bar_layout" />
 
-    <com.isseiaoki.simplecropview.CropImageView
+    <jsc.org.lib.img.crop.CropImageView
         android:id="@+id/civ_crop_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
