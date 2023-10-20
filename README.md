@@ -109,6 +109,7 @@ recyclerView.setLazyLoader(new ILazyLoader() {
 
 # ImageSelector
 多图选择器。参考 [ImageSelector](https://github.com/ioneday/ImageSelector) 进一步优化完善。
+
 ![效果展示](screenshots/image_selector_001.png)
 
 
