@@ -28,6 +28,10 @@
         <activity android:name=".NetImgActivity"/>
         <activity android:name=".LocalImgActivity"/>
         <activity android:name=".NetImg2BitmapActivity"/>
+        <activity android:name="jsc.org.lib.img.selector.activity.ImageSelectorActivity"/>
+        <activity android:name="jsc.org.lib.img.selector.activity.ImagePreviewActivity"/>
+        <activity android:name="jsc.org.lib.img.selector.activity.ImageCropActivity"/>
+
     </application>
 
 </manifest>

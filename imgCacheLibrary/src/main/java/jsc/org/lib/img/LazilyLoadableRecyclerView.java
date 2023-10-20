@@ -204,6 +204,10 @@ public class LazilyLoadableRecyclerView extends RecyclerView {
         this.anticipatedImgHeight = anticipatedImgHeight;
     }
 
+    public void loadImgDelay250() {
+        loadImgDelay(250);
+    }
+
     public void loadImgDelay(long delay) {
         handler.postDelayed(new Runnable() {
             @Override

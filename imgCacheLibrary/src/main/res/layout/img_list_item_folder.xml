@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/iv_first_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/img_ic_placeholder"
+        app:layout_constraintDimensionRatio="h, 1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent=".2" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/iv_first_image"
+        app:layout_constraintLeft_toRightOf="@id/iv_first_image"
+        app:layout_constraintRight_toLeftOf="@id/iv_select_status"
+        app:layout_constraintTop_toTopOf="@id/iv_first_image">
+
+        <TextView
+            android:id="@+id/tv_folder_name"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="所有图片"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/iv_count"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12 张"
+            android:textColor="#999999" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_select_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_radio_button"
+        app:layout_constraintBottom_toBottomOf="@id/iv_first_image"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_first_image" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".3dp"
+        android:layout_marginTop="8dp"
+        android:background="#dcdcdc"
+        app:layout_constraintTop_toBottomOf="@id/iv_first_image" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
