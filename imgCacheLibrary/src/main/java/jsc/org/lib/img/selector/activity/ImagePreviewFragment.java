@@ -8,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import jsc.org.lib.img.ImgCacheExecutor;
 import jsc.org.lib.img.R;
 
-public class ImagePreviewFragment extends Fragment {
+public final class ImagePreviewFragment extends Fragment {
 
     public static final String PATH = "path";
 
@@ -26,7 +27,7 @@ public class ImagePreviewFragment extends Fragment {
         return fragment;
     }
 
-    @Nullable
+    @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.img_fragment_image_preview, container, false);

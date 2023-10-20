@@ -48,9 +48,9 @@ import jsc.org.lib.img.selector.model.LocalMedia;
 import jsc.org.lib.img.selector.model.LocalMediaFolder;
 import jsc.org.lib.img.selector.provider.RoundViewOutlineProvider;
 
-public class ImageSelectorActivity extends AppCompatActivity {
+public final class ImageSelectorActivity extends AppCompatActivity {
     public final static String BUNDLE_CAMERA_PATH = "CameraPath";
-    public final static String REQUEST_OUTPUT = "outputList";
+    public final static String OUTPUT_DATA = "outputList";
     public final static String EXTRA_SELECT_MODE = "SelectMode";
     public final static String EXTRA_SHOW_CAMERA = "ShowCamera";
     public final static String EXTRA_ENABLE_PREVIEW = "EnablePreview";
@@ -222,12 +222,12 @@ public class ImageSelectorActivity extends AppCompatActivity {
                     }
                     String path = ImgUtils.queryImagePath(getApplicationContext(), mPhotoUri);
                     if (enableCrop) {
-                        justAddImage(path);
+                        addImage(path, false);
                         cropImage(path);
                         return;
                     }
                     if (isMultipleMode()) {
-                        addImage(path);
+                        addImage(path, true);
                     } else {
                         finishSelect(path);
                     }
@@ -246,7 +246,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
                     }
                     String path = result.getData().getStringExtra(ImageCropActivity.OUTPUT_PATH);
                     if (isMultipleMode()) {
-                        addImage(path);
+                        addImage(path, true);
                     } else {
                         finishSelect(path);
                     }
@@ -443,7 +443,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
     }
 
     public void onResult(ArrayList<String> images) {
-        setResult(RESULT_OK, new Intent().putStringArrayListExtra(REQUEST_OUTPUT, images));
+        setResult(RESULT_OK, new Intent().putStringArrayListExtra(OUTPUT_DATA, images));
         finish();
     }
 
@@ -479,52 +479,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
         return list;
     }
 
-    private void justAddImage(String path) {
-        File file = new File(path);
-        if (!file.exists()) return;
-        File parent = file.getParentFile();
-        if (parent == null || !parent.exists()) {
-            return;
-        }
-        String dirPath = parent.getPath();
-        LocalMediaFolder dir = folderMap.get(dirPath);
-        boolean isNewDir = false;
-        if (dir == null) {
-            isNewDir = true;
-            dir = new LocalMediaFolder();
-            dir.name = parent.getName();
-            dir.path = dirPath;
-            folders.add(dir);
-            folderMap.put(dirPath, dir);
-        }
-        LocalMedia media = new LocalMedia(path);
-        dir.images.add(0, media);
-        if (isNewDir) {
-            mFoldersPopupWindow.insert(folders.size() - 1);
-        } else {
-            int pos = -1;
-            for (int i = 0; i < folders.size(); i++) {
-                if (dirPath.equals(folders.get(i).path)) {
-                    pos = i;
-                    break;
-                }
-            }
-            if (pos >= 0) {
-                mFoldersPopupWindow.updateFirstImage(pos);
-                mFoldersPopupWindow.updateCount(pos);
-            }
-        }
-        folders.get(0).images.add(0, media);
-        mFoldersPopupWindow.updateFirstImage(0);
-        mFoldersPopupWindow.updateCount(0);
-        //插入当前的列表
-        if (dir.selected || folders.get(0).selected) {
-            adapter.addLocalMedia(media);
-            recyclerView.loadImgDelay250();
-        }
-    }
-
-    private void addImage(String path) {
+    private void addImage(String path, boolean autoSelected) {
         File file = new File(path);
         if (!file.exists()) return;
         File parent = file.getParentFile();
@@ -544,9 +499,10 @@ public class ImageSelectorActivity extends AppCompatActivity {
             folderMap.put(dirPath, dir);
         }
         LocalMedia media = new LocalMedia(path);
-        if (selectedCount < maxSelectCount) {
+        if (autoSelected && selectedCount < maxSelectCount) {
             media.checkStatus = 1;
             selectedCount++;
+            updateUI(selectedCount);
         }
         dir.images.add(0, media);
         if (isNewDir) {
@@ -572,7 +528,6 @@ public class ImageSelectorActivity extends AppCompatActivity {
             adapter.addLocalMedia(media);
             recyclerView.loadImgDelay250();
         }
-        updateUI(selectedCount);
     }
 
     private void updateSelectedImages(List<LocalMedia> newSelectedImages) {

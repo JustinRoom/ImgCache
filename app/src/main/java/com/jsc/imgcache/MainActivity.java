@@ -12,6 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import com.jsc.imgcache.databinding.ActivityMainBinding;
 import com.jsc.imgcache.utils.ViewOutlineUtils;
 
+import java.util.List;
+
 import jsc.org.lib.img.selector.activity.ImageSelectorActivity;
 
 public class MainActivity extends BaseActivity {
@@ -25,7 +27,9 @@ public class MainActivity extends BaseActivity {
         mSelectImagesLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-
+                if (result.getResultCode() == RESULT_OK) {
+                    List<String> paths = result.getData().getStringArrayListExtra(ImageSelectorActivity.OUTPUT_DATA);
+                }
             }
         });
         binding = ActivityMainBinding.inflate(getLayoutInflater());

@@ -18,7 +18,7 @@ import jsc.org.lib.img.R;
 import jsc.org.lib.img.selector.adapter.ImageFolderAdapter;
 import jsc.org.lib.img.selector.model.LocalMediaFolder;
 
-public class FoldersPopupWindow extends PopupWindow {
+public final class FoldersPopupWindow extends PopupWindow {
     private final ImageFolderAdapter adapter;
     private OnSelectChangedListener changedListener = null;
     private int height = 0;

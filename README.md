@@ -107,6 +107,39 @@ recyclerView.setLazyLoader(new ILazyLoader() {
         });
 ```
 
+# ImageSelector
+多图选择器。参考 [ImageSelector](https://github.com/ioneday/ImageSelector) 进一步优化完善。
+![效果展示](screenshots/image_selector_001.png)
+![效果展示](screenshots/image_selector_002.png)
+![效果展示](screenshots/image_selector_003.png)
+
+### 1、注册activity
+```
+        <activity android:name="jsc.org.lib.img.selector.activity.ImageSelectorActivity"/>
+        <activity android:name="jsc.org.lib.img.selector.activity.ImagePreviewActivity"/>
+        <activity android:name="jsc.org.lib.img.selector.activity.ImageCropActivity"/>
+```
+
+### 1、调用activity
+```
+        ActivityResultLauncher<Intent> mSelectImagesLauncher = null;
+        mSelectImagesLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    List<String> paths = result.getData().getStringArrayListExtra(ImageSelectorActivity.OUTPUT_DATA);
+                }
+            }
+        });
+        
+选择多图        
+mSelectImagesLauncher.launch(ImageSelectorActivity.createMultipleIntent(v.getContext(), 9));
+
+选择单图        
+mSelectImagesLauncher.launch(ImageSelectorActivity.createSingleIntent(v.getContext(), 9));
+
+```
+
 # 联系我
 添加微信，请备注"图片缓存框架"
 ![我的微信](/screenshots/wechat.png)

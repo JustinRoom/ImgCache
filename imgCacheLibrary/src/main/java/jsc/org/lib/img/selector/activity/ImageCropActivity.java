@@ -28,7 +28,7 @@ import jsc.org.lib.img.R;
 import jsc.org.lib.img.crop.CropImageView;
 import jsc.org.lib.img.selector.provider.RoundViewOutlineProvider;
 
-public class ImageCropActivity extends AppCompatActivity {
+public final class ImageCropActivity extends AppCompatActivity {
     public static final String EXTRA_PATH = "extraPath";
     public static final String OUTPUT_PATH = "outputPath";
     private static final int SIZE_DEFAULT = 2048;

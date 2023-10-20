@@ -26,7 +26,7 @@ import jsc.org.lib.img.R;
 import jsc.org.lib.img.selector.model.LocalMedia;
 import jsc.org.lib.img.selector.provider.RoundViewOutlineProvider;
 
-public class ImagePreviewActivity extends AppCompatActivity {
+public final class ImagePreviewActivity extends AppCompatActivity {
     public static final String EXTRA_PREVIEW_LIST = "previewList";
     public static final String EXTRA_SELECTED_LIST = "lastSelectedList";
     public static final String EXTRA_POSITION = "position";
