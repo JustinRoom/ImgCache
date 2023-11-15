@@ -48,7 +48,7 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ImageFolderAdapter.
             getItemAt(lastSelectedPosition).selected = false;
             notifyItemChanged(lastSelectedPosition, "updateSelectStatus");
         }
-        getItemAt(pos).selected = false;
+        getItemAt(pos).selected = true;
         notifyItemChanged(pos, "updateSelectStatus");
         lastSelectedPosition = pos;
         return true;
@@ -134,6 +134,7 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ImageFolderAdapter.
         }
 
         void updateFirstImage() {
+            if (folder.images.isEmpty()) return;
             ImgCacheExecutor.with("ImageSelector")
                     .localSource()
                     .loadFromMemoryCache(true)
